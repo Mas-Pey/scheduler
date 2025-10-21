@@ -1,73 +1,58 @@
-# React + TypeScript + Vite
+<p align="center">
+  <img src="https://raw.githubusercontent.com/yourusername/scheduler-frontend/main/public/logo.png" alt="Scheduler Logo" width="120"/>
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<h1 align="center">Scheduler Frontend</h1>
 
-Currently, two official plugins are available:
+<p align="center">
+  <strong>Frontend interface for an Automatic Employee Scheduler.</strong><br/>
+  Built with React, TypeScript, Tailwind CSS, and Vite for modern performance and developer experience.
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<p align="center">
+  <!-- Badges -->
+  <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-5.0+-646CFF?logo=vite&logoColor=white" alt="Vite"/></a>
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=black" alt="React"/></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white" alt="TypeScript"/></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/TailwindCSS-4.0+-38B2AC?logo=tailwindcss&logoColor=white" alt="TailwindCSS"/></a>
+</p>
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🧭 Table of Contents
 
-## Expanding the ESLint configuration
+- [Overview](#overview)
+- [Get Started](#get-started)
+  - [Installation](#installation)
+  - [Run Development Server](#run-development-server)
+- [Tech Stack](#tech-stack)
+- [Folder Structure](#folder-structure)
+- [Development Notes](#development-notes)
+- [License](#license)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🪄 Overview
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Scheduler Frontend** is the user interface for an **Automatic Employee Scheduling System**, designed to help manage and visualize work shift distributions efficiently.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This frontend connects with a REST API built using **Node.js + Fastify + TypeScript + SQLite**, allowing users to:
+- Input scheduling parameters (like number of employees, shifts, or workdays)
+- Generate automatic schedules
+- View and manage the resulting shift tables per employee
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> ⚡ A lightweight and modular foundation for building scheduling or workforce management dashboards.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Get Started
+
+### 🧩 Installation
+
+Clone this repository and install dependencies:
+
+```bash
+git clone https://github.com/yourusername/scheduler-frontend.git
+cd scheduler-frontend
+npm install
 ```
