@@ -12,7 +12,7 @@
 <p align="center">
   <!-- Badges -->
   <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-5.0+-646CFF?logo=vite&logoColor=white" alt="Vite"/></a>
-  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=black" alt="React"/></a>
+  <a href="https://react.dev/learn/typescript#typescript-with-react-components"><img src="https://img.shields.io/badge/React-18+-61DAFB?logo=react&logoColor=black" alt="React"/></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white" alt="TypeScript"/></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/TailwindCSS-4.0+-38B2AC?logo=tailwindcss&logoColor=white" alt="TailwindCSS"/></a>
 </p>
