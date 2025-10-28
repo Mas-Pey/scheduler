@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import '@zach.codes/react-calendar/dist/calendar-tailwind.css';
+import '@zach.codes/react-calendar/dist/calendar-tailwind-no-reset.css';
 import {
   MonthlyCalendar,
   MonthlyNav,
@@ -9,64 +9,126 @@ import {
   DefaultMonthlyEventItem,
 } from '@zach.codes/react-calendar';
 
+interface Employee {
+  id: number;
+  name: string;
+}
+
+interface Schedule {
+  date: string;
+  employees: string[];
+  time_start: string;
+  time_end: string;
+}
+
 interface EventType {
   name: string;
   date: Date;
+  timeStart: string;
+  timeEnd: string;
 }
 
 export const MyMonthlyNav = () => {
-  // form inputs state
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
+  const [schedules, setSchedules] = useState<EventType[]>([])
+  const [employees, setEmployees] = useState<Employee[]>([])
+  const [showList, setShowList] = useState(false)
 
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-  const [events, setEvents] = useState<EventType[]>([
-    { name: 'John', date: new Date() },
-    { name: 'Jane', date: new Date() },
-  ]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !date) return;
-
-    const newEvent: EventType = {
-      name, 
-      date: new Date(date)
+  // GET employee data
+  const fetchEmployees = async () => {
+    try {
+      const response = await fetch(
+        'http://127.0.0.1:3000/employees',
+      )
+      const json = await response.json()
+      setEmployees(json.employees)
+      setShowList(true)
+    } catch (error) {
+      console.error(error)
+      alert('Failed to fetch employees')
     }
+  }
 
-    setEvents((prev => [...prev, newEvent]))
+  // POST create schedule for employees
+  const createSchedule = async () => {
+    try {
+      const response = await fetch(
+        'http://127.0.0.1:3000/create-schedule', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          month: 11,
+          shift_per_day: 1,
+          open_hour: 8,
+          hour_shift: 8,
+          employee_per_shift: 2,
+          maximum_hour_per_week: 40
+        })
+      })
+      const json = await response.json()
+      const mappedSchedules: EventType[] = json.schedules.flatMap((list: Schedule) =>
+        list.employees.map((emp: string) => ({
+          name: emp,
+          date: new Date(list.date),
+          timeStart: list.time_start,
+          timeEnd: list.time_end
+        }))
+      )
+      console.log(mappedSchedules)
+      setSchedules(mappedSchedules)
+    } catch (error) {
+      console.error(error)
+      alert('Failed to create schedules')
+    }
   }
 
   return (
-    <div style={{ margin: '0 auto', maxWidth: '800px', padding: '1rem' }}>
-      {/* Form Input */}
-      <h2>Add Event</h2>
-      <form onSubmit={handleSubmit} className='max-w-sm mx auto'>
-        <div className='mb-2'>
-          <label className='block mb-2 text-sm font-medium text-gray-900'>Name of Employee:</label>
-          <input type='text' value={name} onChange={(e) => setName(e.target.value)}/>
-        </div>
-        <div className='mb-2'>
-          <label>Date:</label>
-          <input type='date' value={date} onChange={(e) => setDate(e.target.value)}/>
-        </div>
-        <button type="submit" > Add Data </button>
-      </form>
+    <div className='mx-auto max-w-5xl py-4'>
+      {/* Get Data */}
+      <div>
+        <button onClick={fetchEmployees} className='p-2 bg-amber-600 text-white text-md rounded-md hover:bg-amber-700'>
+          Load Employees
+        </button>
+        {showList && (
+          <div className="mt-4">
+            <h2 className="font-bold mb-2">Employee List:</h2>
+            <ul className="list-disc pl-5">
+              {employees.map(emp => (
+                <li key={emp.id}>{emp.name}</li>
+              ))}
+            </ul>
 
-      {/* Monthly Calendar */}
+            {/* Tombol untuk menutup list */}
+            <button
+              onClick={() => setShowList(false)}
+              className='mt-2 p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600'
+            >
+              Hide Employees
+            </button>
+          </div>
+        )}
+      </div>
+
       <MonthlyCalendar
         currentMonth={currentMonth}
         onCurrentMonthChange={setCurrentMonth}
       >
         <MonthlyNav /> {/* default nav */}
-        <MonthlyBody events={events}>
+        <div className='flex my-2 justify-center'>
+          <button onClick={createSchedule} className='p-2 bg-blue-500 text-white rounded-md hover:bg-blue-700'>
+            Generate Schedule
+          </button>
+        </div>
+        <MonthlyBody events={schedules}>
           <MonthlyDay<EventType>
             renderDay={(dayEvents) =>
               dayEvents.map((item, idx) => (
                 <DefaultMonthlyEventItem
                   key={idx}
                   title={item.name}
-                  date={format(item.date, 'k:mm')}
+                  date={`${item.timeStart} - ${item.timeEnd}`}
                 />
               ))
             }
