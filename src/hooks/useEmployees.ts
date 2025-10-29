@@ -10,12 +10,22 @@ export const useEmployees = () => {
             const response = await fetch(
                 'http://127.0.0.1:3000/employees',
             )
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || "Failed to fetch employees")
+            }
+
             const json = await response.json()
             setEmployees(json.employees)
             setShowList(true)
-        } catch (error) {
-            console.error(error)
-            alert('Failed to fetch employees')
+
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(error.message)
+            } else {
+                alert('Failed to fetch employees')
+            }
         }
     }
 

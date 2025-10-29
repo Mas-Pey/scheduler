@@ -14,13 +14,19 @@ export const useSchedule = () => {
                 },
                 body: JSON.stringify({
                     month: 9,
-                    shift_per_day: 1,
+                    shift_per_day: 2,
                     open_hour: 8,
                     hour_shift: 7,
-                    employee_per_shift: 2,
+                    employee_per_shift: 1,
                     maximum_hour_per_week: 40
                 })
             })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || "Failed to create schedule")
+            }
+
             const json = await response.json()
             const mappedSchedules: EventType[] = json.schedules.flatMap((list: Schedule) =>
                 list.employees.map((emp: string) => ({
@@ -31,9 +37,14 @@ export const useSchedule = () => {
                 }))
             )
             setSchedules(mappedSchedules)
-        } catch (error) {
-            console.error(error)
-            alert('Failed to create schedules')
+
+        } catch (error: unknown) {
+            console.log(error)
+            if (error instanceof Error) {
+                alert(error.message);
+            } else {
+                alert("Failed to create schedules");
+            }
         }
     }
 
