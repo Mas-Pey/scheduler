@@ -7,12 +7,22 @@ import { ScheduleCalendar } from './components/ScheduleCalendar';
 
 function App() {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
-  const { employees, showList, fetchEmployees, setShowList } = useEmployees()
+  const {
+    employees,
+    showList,
+    updatingId,
+    fetchEmployees,
+    setShowList,
+    updateEmployee
+  } = useEmployees()
   const { schedules, createSchedule } = useSchedule()
 
   return (
     <div className='mx-auto max-w-5xl py-4'>
-      <button onClick={fetchEmployees} className='p-2 bg-amber-600 text-white text-md rounded-md hover:bg-amber-700'>
+      <button
+        onClick={fetchEmployees}
+        className='p-2 bg-amber-600 text-white text-md rounded-md hover:bg-amber-700'
+      >
         Load Employees
       </button>
 
@@ -20,6 +30,8 @@ function App() {
         employees={employees}
         show={showList}
         onHide={() => setShowList(false)}
+        updatingId={updatingId}
+        onUpdate={updateEmployee}
       />
 
       <ScheduleCalendar
