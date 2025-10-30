@@ -4,7 +4,14 @@ import type { EventType, Schedule } from "../types"
 export const useSchedule = () => {
     const [schedules, setSchedules] = useState<EventType[]>([])
 
-    const createSchedule = async () => {
+    const createSchedule = async (params: {
+        month: number
+        shift_per_day: number
+        open_hour: number
+        hour_shift: number
+        employee_per_shift: number
+        maximum_hour_per_week: number
+    }) => {
         try {
             const response = await fetch(
                 'http://127.0.0.1:3000/create-schedule', {
@@ -12,14 +19,7 @@ export const useSchedule = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    month: 9,
-                    shift_per_day: 2,
-                    open_hour: 8,
-                    hour_shift: 7,
-                    employee_per_shift: 1,
-                    maximum_hour_per_week: 40
-                })
+                body: JSON.stringify(params)
             })
 
             if (!response.ok) {
@@ -28,6 +28,7 @@ export const useSchedule = () => {
             }
 
             const json = await response.json()
+            console.log(json)
             const mappedSchedules: EventType[] = json.schedules.flatMap((list: Schedule) =>
                 list.employees.map((emp: string) => ({
                     name: emp,
@@ -36,6 +37,7 @@ export const useSchedule = () => {
                     timeEnd: list.time_end
                 }))
             )
+            console.log(mappedSchedules)
             setSchedules(mappedSchedules)
 
         } catch (error: unknown) {
