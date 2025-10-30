@@ -5,7 +5,6 @@ interface EmployeeListProps {
     employees: Employee[]
     show: boolean
     onHide: () => void
-    updatingId: number | null
     onUpdate: (id: number, name: string) => Promise<void>
     onAdd: (name: string) => Promise<void>
 }
@@ -14,7 +13,6 @@ export const EmployeeList = ({
     employees,
     show,
     onHide,
-    updatingId,
     onUpdate,
     onAdd
 }: EmployeeListProps) => {
@@ -71,7 +69,7 @@ export const EmployeeList = ({
                 ) : (
                     <button
                         onClick={() => setAdding(true)}
-                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        className="p-2 bg-green-600 text-white rounded hover:bg-green-700"
                     >
                         Add Employee
                     </button>
@@ -103,10 +101,9 @@ export const EmployeeList = ({
                                             alert("Failed to edit employee")
                                         }
                                     }}
-                                    disabled={updatingId === emp.id}
                                     className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
                                 >
-                                    {updatingId === emp.id ? 'Saving...' : 'Save'}
+                                    Save
                                 </button>
                                 <button
                                     onClick={() => setEditingId(null)}
