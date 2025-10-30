@@ -7,6 +7,7 @@ interface EmployeeListProps {
     onHide: () => void
     updatingId: number | null
     onUpdate: (id: number, name: string) => Promise<void>
+    onAdd: (name: string) => Promise<void>
 }
 
 export const EmployeeList = ({
@@ -14,16 +15,69 @@ export const EmployeeList = ({
     show,
     onHide,
     updatingId,
-    onUpdate
+    onUpdate,
+    onAdd
 }: EmployeeListProps) => {
     const [editingId, setEditingId] = useState<number | null>(null)
     const [nameInput, setNameInput] = useState("")
+    const [adding, setAdding] = useState(false)
+    const [newName, setNewName] = useState("")
 
     if (!show) return null
 
     return (
         <div className="mt-4">
             <h2 className="font-bold mb-2">Employee List:</h2>
+
+            <div className="flex items-center space-x-3 mb-3 max-w-3xs">
+                {adding ? (
+                    <>
+                        <input
+                            onChange={(e) => setNewName(e.target.value)}
+                            value={newName}
+                            placeholder="New employee name"
+                            className="border rounded p-1 flex-1"
+                        />
+                        <button
+                            onClick={async () => {
+                                const trimmed = newName.trim()
+                                if (!trimmed) {
+                                    alert('Name cannot be empty')
+                                    return
+                                }
+                                try {
+                                    await onAdd(trimmed)
+                                    setNewName("")
+                                    setAdding(false)
+                                } catch (error) {
+                                    console.error(error)
+                                    alert("Failed to add employee")
+                                }
+                            }}
+                            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                            Add
+                        </button>
+                        <button
+                            onClick={() => {
+                                setNewName("")
+                                setAdding(false)
+                            }}
+                            className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+                        >
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button
+                        onClick={() => setAdding(true)}
+                        className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                    >
+                        Add Employee
+                    </button>
+                )}
+            </div>
+
             <ul className="space-y-3">
                 {employees.map(emp => (
                     <li key={emp.id} className="flex items-center space-x-3 max-w-3xs">
@@ -80,12 +134,14 @@ export const EmployeeList = ({
                     </li>
                 ))}
             </ul>
+
             <button
                 onClick={onHide}
                 className='mt-2 p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600'
             >
                 Hide Employees
             </button>
+
         </div>
     )
 }

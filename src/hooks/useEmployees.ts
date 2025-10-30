@@ -66,6 +66,16 @@ export const useEmployees = () => {
         }
     }
 
+    const addEmmployee = async () => {
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:3000/employee`
+            )
+        } catch (error) {
+            
+        }
+    }
+
     return {
         employees,
         showList,
