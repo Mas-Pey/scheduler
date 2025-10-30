@@ -4,7 +4,6 @@ import type { Employee } from "../types"
 export const useEmployees = () => {
     const [employees, setEmployees] = useState<Employee[]>([])
     const [showList, setShowList] = useState(false)
-    const [updatingId, setUpdating] = useState<number | null>(null)
 
     const fetchEmployees = async () => {
         try {
@@ -32,7 +31,6 @@ export const useEmployees = () => {
 
     const updateEmployee = async (id: number, name: string) => {
         try {
-            setUpdating(id)
             const response = await fetch(
                 `http://127.0.0.1:3000/employee/${id}`, {
                     method: 'PUT',
@@ -54,7 +52,7 @@ export const useEmployees = () => {
             setEmployees(prev =>
                 prev.map(e => (e.id) === updated.id ? updated : e)
             )
-            // Hello
+
         } catch (error: unknown) {
             if (error instanceof Error) {
                 alert(error.message)
@@ -62,27 +60,48 @@ export const useEmployees = () => {
                 alert('Failed to edit employee')
             }
             throw error
-        } finally {
-            setUpdating(null)
         }
     }
 
-    const addEmmployee = async () => {
+    const addEmployee = async (name: string) => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:3000/employee`
+                `http://127.0.0.1:3000/employee`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name })
+                }
             )
-        } catch (error) {
-            
-        }
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || 'Failed to add employee')
+            }
+
+            const json = await response.json()
+            const newEmployee = {
+                id: json.employee.id,
+                name: json.employee.name
+            }
+
+            setEmployees(prev => [...prev, newEmployee])
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(error.message)
+            } else {
+                alert('Failed to add employee')
+            }
+        } 
     }
 
     return {
         employees,
         showList,
-        updatingId,
         fetchEmployees,
         setShowList,
-        updateEmployee
+        updateEmployee,
+        addEmployee
     }
 }
