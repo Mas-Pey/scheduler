@@ -13,7 +13,8 @@ function App() {
     fetchEmployees,
     setShowList,
     updateEmployee,
-    addEmployee
+    addEmployee,
+    deleteEmployee
   } = useEmployees()
   const { schedules, createSchedule } = useSchedule()
 
@@ -32,6 +33,7 @@ function App() {
         onHide={() => setShowList(false)}
         onUpdate={updateEmployee}
         onAdd={addEmployee}
+        onDelete={deleteEmployee}
       />
 
       <ScheduleCalendar
