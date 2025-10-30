@@ -7,6 +7,7 @@ interface EmployeeListProps {
     onHide: () => void
     onUpdate: (id: number, name: string) => Promise<void>
     onAdd: (name: string) => Promise<void>
+    onDelete: (id: number) => Promise<void>
 }
 
 export const EmployeeList = ({
@@ -14,7 +15,8 @@ export const EmployeeList = ({
     show,
     onHide,
     onUpdate,
-    onAdd
+    onAdd,
+    onDelete
 }: EmployeeListProps) => {
     const [editingId, setEditingId] = useState<number | null>(null)
     const [nameInput, setNameInput] = useState("")
@@ -40,7 +42,7 @@ export const EmployeeList = ({
                             onClick={async () => {
                                 const trimmed = newName.trim()
                                 if (!trimmed) {
-                                    alert('Name cannot be empty')
+                                    alert("Name cannot be empty")
                                     return
                                 }
                                 try {
@@ -78,7 +80,7 @@ export const EmployeeList = ({
 
             <ul className="space-y-3">
                 {employees.map(emp => (
-                    <li key={emp.id} className="flex items-center space-x-3 max-w-3xs">
+                    <li key={emp.id} className="flex items-center space-x-3 max-w-2xs">
                         {editingId === emp.id ? (
                             <>
                                 <input
@@ -90,7 +92,7 @@ export const EmployeeList = ({
                                     onClick={async () => {
                                         const trimmed = nameInput.trim()
                                         if (!trimmed) {
-                                            alert('Name cannot be empty')
+                                            alert("Name cannot be empty")
                                             return
                                         }
                                         try {
@@ -117,6 +119,7 @@ export const EmployeeList = ({
                                 <span className="flex-1 truncate">
                                     {emp.name}
                                 </span>
+
                                 <button
                                     onClick={() => {
                                         setEditingId(emp.id);
@@ -125,6 +128,23 @@ export const EmployeeList = ({
                                     className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
                                 >
                                     Edit
+                                </button>
+
+                                <button
+                                    onClick={async () => {
+                                        const confirmation = confirm(`Are you sure you want to delete ${emp.name}?`)
+                                        if (!confirmation) return
+                                        
+                                        try {
+                                            await onDelete(emp.id)
+                                        } catch (error) {
+                                            console.error(error)
+                                            alert('Failed to delete employee')
+                                        }
+                                    }}
+                                    className="px-3 py-1 bg-red-600 text-white rounded hover:bg-blue-600"
+                                >
+                                    Delete
                                 </button>
                             </>
                         )}

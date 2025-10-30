@@ -66,7 +66,7 @@ export const useEmployees = () => {
     const addEmployee = async (name: string) => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:3000/employee`, {
+                'http://127.0.0.1:3000/employee', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -96,12 +96,36 @@ export const useEmployees = () => {
         } 
     }
 
+    const deleteEmployee = async (id: number) => {
+        try {
+            const response = await fetch(
+                `http://127.0.0.1:3000/employee/${id}`, {
+                    method: 'DELETE'
+                }
+            )
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || 'Failed to delete employee')
+            }
+
+            setEmployees(prev => prev.filter(e => e.id !== id))
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(error.message)
+            } else {
+                alert('Failed to delete employee')
+            }
+        }
+    }
+
     return {
         employees,
         showList,
         fetchEmployees,
         setShowList,
         updateEmployee,
-        addEmployee
+        addEmployee,
+        deleteEmployee
     }
 }
