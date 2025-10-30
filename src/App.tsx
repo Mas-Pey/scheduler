@@ -10,10 +10,10 @@ function App() {
   const {
     employees,
     showList,
-    updatingId,
     fetchEmployees,
     setShowList,
-    updateEmployee
+    updateEmployee,
+    addEmployee
   } = useEmployees()
   const { schedules, createSchedule } = useSchedule()
 
@@ -30,8 +30,8 @@ function App() {
         employees={employees}
         show={showList}
         onHide={() => setShowList(false)}
-        updatingId={updatingId}
         onUpdate={updateEmployee}
+        onAdd={addEmployee}
       />
 
       <ScheduleCalendar
